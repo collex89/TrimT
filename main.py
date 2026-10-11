@@ -1,8 +1,7 @@
-
 import os
 from dotenv import load_dotenv
 import neatlogs
-from openai import OpenAI
+from google import genai
 
 # Load keys from the .env file
 load_dotenv()
@@ -13,18 +12,16 @@ neatlogs.init(
     workflow_name="my-first-app",
 )
 
-# Connect to OpenAI
-client = neatlogs.wrap(OpenAI())
+# Connect to Gemini (reads GEMINI_API_KEY from the environment)
+client = neatlogs.wrap(genai.Client())
 
 # Make a test AI request
 try:
-    response = client.chat.completions.create(
-        model="gpt-4o",
-        messages=[
-            {"role": "user", "content": "What is the capital of Spain?"}
-        ],
+    response = client.models.generate_content(
+        model="gemini-3.8-flash",
+        contents="What is the capital of Spain?",
     )
-    print(response.choices[0].message.content)
+    print(response.text)
 finally:
     # Send traces even if the request failed
     neatlogs.flush()
