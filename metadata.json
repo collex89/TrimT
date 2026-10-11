@@ -1,0 +1,51 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4NEX2193RJ28AW12VZZSM30",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 3,
+  "files_touched": [
+    ".gitignore",
+    "README.md",
+    "config.yaml",
+    "demo_agent/__init__.py",
+    "demo_agent/agent.py",
+    "demo_agent/fake.py",
+    "demo_agent/knowledge.py",
+    "demo_agent/run.py",
+    "pricing.yaml",
+    "requirements.txt",
+    "tests/test_detectors.py",
+    "trimt/__init__.py",
+    "trimt/__main__.py",
+    "trimt/analyze.py",
+    "trimt/config.py",
+    "trimt/detectors/__init__.py",
+    "trimt/detectors/overpowered.py",
+    "trimt/detectors/redundant.py",
+    "trimt/detectors/repeated_prompt.py",
+    "trimt/judge.py",
+    "trimt/load.py",
+    "trimt/logger.py",
+    "trimt/pricing.py",
+    "trimt/records.py",
+    "trimt/report.py",
+    "trimt/suggest.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 122,
+    "cache_creation_tokens": 103751,
+    "cache_read_tokens": 10766767,
+    "output_tokens": 74706,
+    "api_call_count": 61
+  }
+}

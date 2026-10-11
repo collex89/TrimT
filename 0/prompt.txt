@@ -1,0 +1,150 @@
+i have done the cfo part
+
+---
+
+<pasted_content id="9d88">
+Trim-T
+Trim-T finds wasted spend in AI agents. It reads an agent's traces (every LLM call, with its model, tokens, prompt and output), spots the steps that cost more than they need to, and suggests a fix for each one with the cost now and the cost after.
+Tagline: Trim the tokens, keep the answers.
+This is a hackathon project for neatHack, run by neatlogs. The builder is Collex (@collex89), working solo, in Lagos (WAT, UTC+1).
+Deadlines
+
+* Submissions: Monday 12 Oct 2026, 2:30 PM to 7:25 PM WAT (7:00 to 11:55 PM IST). The organisers engage with the first 50 posts, so the target is to post soon after 2:30 PM WAT.
+* Submission format: a demo video posted on X. The exact format comes from the organisers before the deadline.
+* The submission must also include a business plan (pricing, costs, revenue, runway) made with cfo.ai.
+* Winners are announced Friday 16 Oct.
+
+Everything below is scoped to be buildable by one person in about a day and a half. Cut scope before cutting the demo.
+Why it fits the hackathon
+neatlogs is an observability tool for AI agents. Its Python SDK auto-captures LLM calls with metrics. Trim-T turns those traces into savings, so it uses the host's product directly. Sponsors with credits: AWS and CrustData. Other sponsors: Dodo Payments, Entire, Orchestrator.inc.
+What it does
+
+1. Take the traces from one or more agent runs.
+2. Run three detectors over each run.
+3. For each finding, compute the current cost and the estimated cost after the fix, and write a plain-English suggestion.
+4. Show a report: findings per step, total cost per run before and after, and percent saved.
+5. Apply the fixes to the demo agent, rerun it, and show that the output stays the same while the cost drops.
+
+The three detectors
+1. Overpowered model. A simple step running on an expensive model.
+
+* Flag a call when it uses an expensive model tier AND the step looks simple: short output (default under 60 output tokens), or a step name or prompt that reads as classify, route, extract, label or format.
+* Suggestion: switch to a cheaper model. Savings = same tokens priced at the cheaper model.
+* Nice to have: replay the call on the cheaper model and compare outputs, so the claim "same answer" is backed by a check.
+
+2. Bloated or repeated prompt. The same large chunk of prompt or context sent again and again.
+
+* Flag when a shared prefix (system prompt or context) of more than about 1,000 tokens repeats across 3 or more calls in a run.
+* Also flag retrieved context that is very large compared to the output.
+* Suggestion: use prompt caching, or trim the prompt. Savings = repeated tokens priced at the cached rate (or removed).
+
+3. Redundant calls. The same request made more than once in a run.
+
+* Flag calls whose normalised prompt (whitespace and casing stripped) hashes the same, or is near-identical (similarity 0.95 or higher), within one run.
+* Suggestion: cache the result or merge the steps. Savings = cost of the duplicate calls.
+
+Thresholds live in config so they are easy to tune for the demo.
+How it works
+Getting traces
+The neatlogs SDK sends traces to neatlogs. Its public API is `init()`, `flush()`, `shutdown()`, `span()`, `trace()` and `PromptTemplate`. It is not confirmed that neatlogs offers an API for reading traces back out. Ask in the neatHack Discord or at neatlogs office hours.
+Until that is answered, use this approach:
+
+* Wrap the LLM client so every call is still sent to neatlogs, and the same call is also written locally as one JSON line per call.
+* Trim-T analyses the local copy.
+* If a read API turns up, add a loader for it behind the same interface. The detectors should not care where traces come from.
+
+Trace record (one per LLM call)
+
+```json
+{
+  "run_id": "run_2026-10-11_001",
+  "step": "classify_intent",
+  "call_index": 0,
+  "model": "provider/model-name",
+  "input_tokens": 1240,
+  "output_tokens": 8,
+  "cached_input_tokens": 0,
+  "prompt": "full prompt or messages, as sent",
+  "output": "model output",
+  "latency_ms": 640,
+  "timestamp": "2026-10-11T10:02:11Z"
+}
+
+```
+
+Pricing
+Keep model prices in `pricing.yaml` (input, output and cached-input price per million tokens, per model, plus a tier label). Fill this in from the providers' current pricing pages. Do not guess prices. Every cost in the report is computed from this file.
+Finding (detector output)
+
+```json
+{
+  "run_id": "...",
+  "step": "load_context",
+  "detector": "repeated_prompt",
+  "evidence": "4,180-token system prompt sent in 14 calls",
+  "cost_now": 0.588,
+  "cost_after": 0.094,
+  "suggestion": "Cache the system prompt so it is sent once per run."
+}
+
+```
+
+The suggestion text can come from an LLM given the finding and the evidence, but the numbers must come from code, never from the LLM.
+Components
+
+1. Demo agent (`demo_agent/`). A small support agent that is wasteful on purpose: a large model for intent classification, a long system prompt resent on every call, and the same doc search done twice. Instrumented with neatlogs plus the local logger.
+2. Trace logger (`trimt/logger.py`). Wraps the LLM client, writes JSONL.
+3. Loader (`trimt/load.py`). Reads JSONL into records, grouped by run.
+4. Pricing (`trimt/pricing.py` + `pricing.yaml`).
+5. Detectors (`trimt/detectors/`). One module per detector, each returning findings.
+6. Suggestions (`trimt/suggest.py`). Turns findings into short plain-English fixes.
+7. Report (`trimt/report.py`). A single static HTML page: per-step findings, before and after totals, percent saved. A CLI summary too.
+8. Fixed agent run. The same demo agent with the fixes applied, run on the same inputs, so the report can show before vs after.
+
+Stack
+
+* Python 3.12+ (the neatlogs SDK requires it).
+* `neatlogs` SDK for tracing.
+* One LLM provider SDK, whichever has credits. AWS credits are available, so Amazon Bedrock is an option.
+* Static HTML report. No frontend framework unless there is spare time.
+
+Report look
+Match the flier: light background `#F4F5F2`, ink `#15171A`, one red accent `#D9381E` for struck-out costs and fixes, Geist for text and Geist Mono for numbers. The report reads like a receipt: each wasteful step's cost is struck out in red with the cheaper fix and its cost beside it, and the run total at the bottom shows old vs new.
+Demo video plan (about 60 seconds)
+
+1. The wasteful agent answers a few support questions. Show its cost per run.
+2. Run Trim-T on the traces. The receipt appears with three findings.
+3. Apply the fixes, rerun on the same questions.
+4. Show the answers match and the new cost per run. End on old total struck out, new total beside it.
+
+Build order
+
+1. Demo agent + logger, producing real traces in neatlogs and locally.
+2. Pricing file and loader.
+3. The three detectors, with tests on hand-made traces.
+4. Report page.
+5. Fixed agent run and before/after comparison.
+6. Record the video.
+
+Stretch, only if time allows: host the report on AWS; a paid "continuous monitoring" plan through Dodo Payments; a check that replays flagged calls on the cheaper model to prove outputs match.
+Not in scope
+
+* Auto-editing the user's code.
+* Supporting every agent framework. One demo agent is enough.
+* Accounts, auth or a database.
+
+Open questions
+
+* Does neatlogs have an API or export for reading traces? (Ask in Discord.)
+* Which LLM provider and models to use for the demo, based on available credits.
+</pasted_content id="9d88">
+
+---
+
+<task-notification>
+<task-id>bhkgiceku</task-id>
+<tool-use-id>toolu_01JvjvkamuLik2urpKNrCmTg</tool-use-id>
+<output-file>C:\Users\pc\AppData\Local\Temp\claude\C--Users-pc-Desktop-TrimT\ae39fa9c-8061-43b3-b5d3-8ce8ff138ffd\tasks\bhkgiceku.output</output-file>
+<status>completed</status>
+<summary>Background command "Test which Gemini models respond and their usage fields" completed (exit code 0)</summary>
+</task-notification>
