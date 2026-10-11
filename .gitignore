@@ -1,2 +1,6 @@
-﻿
 .env
+__pycache__/
+.pytest_cache/
+traces/*.log
+traces/dryrun/
+reports/preview.html

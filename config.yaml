@@ -1,0 +1,20 @@
+# Detector thresholds. Tune these for the demo.
+
+overpowered_model:
+  expensive_tiers: [premium]
+  cheaper_model: gemini-3.1-flash-lite
+  # A step is "simple" if its visible output is short ...
+  max_output_tokens: 60
+  # ... or its step name or prompt reads like one of these jobs.
+  simple_keywords: [classify, route, extract, label, format, categorize, tag]
+
+repeated_prompt:
+  min_prefix_tokens: 1000
+  min_calls: 3
+  # Flag retrieved context that dwarfs the answer.
+  large_context_min_tokens: 3000
+  large_context_ratio: 40      # input tokens per visible output token
+  context_trim_fraction: 0.7   # share of the context a top-k retrieval would drop
+
+redundant_calls:
+  similarity: 0.95

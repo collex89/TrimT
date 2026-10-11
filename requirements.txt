@@ -1,0 +1,5 @@
+neatlogs>=1.4.26
+google-genai>=2.29
+python-dotenv>=1.0
+PyYAML>=6.0
+pytest>=8
