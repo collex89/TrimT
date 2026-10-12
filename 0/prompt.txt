@@ -1,0 +1,109 @@
+how can i also create a demo video?
+
+---
+
+how does this TrimT works?
+
+---
+
+when is the submission in my time?
+
+Saturday, October 10
+
+12:00 AM IST — hackathon begins
+
+We’ll transfer AWS and CrustData credits to you.
+
+9:00 AM IST — kickoff call
+
+We’ll kick things off with TheVibeFounder, a surprise workshop (more on this later), and a Q&A before everyone starts building.
+
+We’ll also have workshops from Entire, AWS, and neatlogs.
+
+Sunday, October 11
+
+More workshops and office hours with neatlogs, Orchestrator.inc, Dodo Payments, CrustData, plus a Q&A with TheVibeFounder.
+
+Monday, October 12
+
+5:00–6:00 PM IST — closing call
+
+We’ll share some of our favorite projects and hear from a few participants.
+
+7:00–11:55 PM IST — submissions
+
+Submit your final demo video on X (Twitter).
+
+We’ll send the exact submission format before then.
+
+We’ll also engage with the first 50 tweets of submissions, so there’s a good reason to get yours in early :)
+
+Friday, October 16
+
+Winners announced.
+
+Winners get $19k in cash & credits (details here).
+
+All winners get 3 months of neatlogs Pro (worth $1500).
+
+We’ll send the full workshop schedule soon.
+
+For now, make sure you’re in the Discord. That’s where we’ll post updates, host the sessions, and connect you with mentors and sponsors.
+
+See you Saturday,
+Team neatlogs
+
+Simran Sachdeva
+1 Oct, 17:43
+join the neatHack discord
+hey builder,
+
+the neatHack discord is now finally open ! 👀
+
+all event updates, announcements and schedule changes will be posted there first. join so you don't miss anything
+
+still looking for a team? discord is also the best place to find one. you can meet other builders, pitch your idea, or join someone else's.
+
+join here: https://neatlogs.com/discord
+
+see you inside,
+simran @ neatlogs
+
+---
+
+so i can take a break for now?
+
+---
+
+@"C:\Users\pc\Downloads\Product Demo Video _ SaaS Explainer Video _ Infinity.mp4"
+now it has been reset, can you make this kind of video for this product so i can add when i am posting
+
+---
+
+<task-notification>
+<task-id>bnthwnio2</task-id>
+<tool-use-id>toolu_01544oyuXCfiQYqHfwEqcZW6</tool-use-id>
+<output-file>C:\Users\pc\AppData\Local\Temp\claude\C--Users-pc-Desktop-TrimT\ae39fa9c-8061-43b3-b5d3-8ce8ff138ffd\tasks\bnthwnio2.output</output-file>
+<status>completed</status>
+<summary>Background command "Run real wasteful demo batch" completed (exit code 0)</summary>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>bv0nrpwrh</task-id>
+<tool-use-id>toolu_01MC1qPZxeWD1oYBJJCUvUFx</tool-use-id>
+<output-file>C:\Users\pc\AppData\Local\Temp\claude\C--Users-pc-Desktop-TrimT\ae39fa9c-8061-43b3-b5d3-8ce8ff138ffd\tasks\bv0nrpwrh.output</output-file>
+<status>completed</status>
+<summary>Background command "Run real fixed demo batch" completed (exit code 0)</summary>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>bg5jdsdid</task-id>
+<tool-use-id>toolu_017vX1gg1sv23VPAmkqvyRhu</tool-use-id>
+<output-file>C:\Users\pc\AppData\Local\Temp\claude\C--Users-pc-Desktop-TrimT\ae39fa9c-8061-43b3-b5d3-8ce8ff138ffd\tasks\bg5jdsdid.output</output-file>
+<status>completed</status>
+<summary>Background command "Render the full explainer video" completed (exit code 0)</summary>
+</task-notification>

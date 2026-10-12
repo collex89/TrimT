@@ -1,0 +1,41 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4QHHRFX0EMN4JB00A5CW2HC",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 5,
+  "files_touched": [
+    ".gitignore",
+    "demo_agent/run.py",
+    "trimt/__main__.py",
+    "trimt/logger.py",
+    "video/fonts/fonts.css",
+    "video/fonts/geist_v5_gyByhwUxId8gMEwRGFWfOw.woff2",
+    "video/fonts/geist_v5_gyByhwUxId8gMEwSGFWfOw.woff2",
+    "video/fonts/geist_v5_gyByhwUxId8gMEwTGFWfOw.woff2",
+    "video/fonts/geist_v5_gyByhwUxId8gMEwYGFWfOw.woff2",
+    "video/fonts/geist_v5_gyByhwUxId8gMEwcGFU.woff2",
+    "video/fonts/geistmono_v6_or3nQ6H-1_WfwkMZI_qYFg08vz7ehw.woff2",
+    "video/fonts/geistmono_v6_or3nQ6H-1_WfwkMZI_qYFrMdmgPn.woff2",
+    "video/fonts/geistmono_v6_or3nQ6H-1_WfwkMZI_qYFrcdmg.woff2",
+    "video/fonts/geistmono_v6_or3nQ6H-1_WfwkMZI_qYFrgdmgPn.woff2",
+    "video/fonts/geistmono_v6_or3nQ6H-1_WfwkMZI_qYFrkdmgPn.woff2",
+    "video/fonts/geistmono_v6_or3nQ6H-1_WfwkMZI_qYFrodmgPn.woff2"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 114,
+    "cache_creation_tokens": 281563,
+    "cache_read_tokens": 15542634,
+    "output_tokens": 53730,
+    "api_call_count": 57
+  }
+}
