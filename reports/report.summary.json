@@ -1,0 +1,20 @@
+{
+  "runs": [
+    {
+      "run_id": "wasteful-20261012-081021-q1",
+      "case_id": "q1",
+      "cost_now": 0.0212625,
+      "cost_after_est": 0.00380975,
+      "measured_after": 0.00556225,
+      "verdict": "SAME: Both replies provide the same delivery timeframe, explain the 48-hour transit scan policy, confirm the parcel is not considered lost, and provide the exact same 72-hour threshold and navigation path for submitting a tracking request."
+    },
+    {
+      "run_id": "wasteful-20261012-081021-q3",
+      "case_id": "q3",
+      "cost_now": 0.0227445,
+      "cost_after_est": 0.0057461249999999995,
+      "measured_after": null,
+      "verdict": null
+    }
+  ]
+}

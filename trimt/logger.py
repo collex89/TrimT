@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import httpx
 import neatlogs
 from google import genai
 from google.genai import errors, types
@@ -108,10 +109,13 @@ class TracedLLM:
         for attempt in range(MAX_RETRIES):
             try:
                 return call()
-            except errors.APIError as e:
-                # Free-tier rate limits and transient server errors are worth waiting out.
-                if e.code not in (429, 500, 503) or attempt == MAX_RETRIES - 1:
+            except (errors.APIError, httpx.TransportError) as e:
+                # Free-tier rate limits, transient server errors and dropped connections
+                # are worth waiting out.
+                code = getattr(e, "code", None)
+                if (code is not None and code not in (429, 500, 503)) or attempt == MAX_RETRIES - 1:
                     raise
                 wait = min(2 ** attempt * 5, 60)
-                print(f"[trimt] {step}: {model} returned {e.code}, retrying in {wait}s", file=sys.stderr, flush=True)
+                reason = code or type(e).__name__
+                print(f"[trimt] {step}: {model} failed ({reason}), retrying in {wait}s", file=sys.stderr, flush=True)
                 time.sleep(wait)

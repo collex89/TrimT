@@ -37,6 +37,8 @@ def main(argv=None) -> int:
     parser.add_argument("--cases", default=DEFAULT_CASES, help=f"question ids to run (default {DEFAULT_CASES}; 'all' for every one)")
     parser.add_argument("--dry-run", action="store_true", help="use a fake client: no API calls, no quota")
     parser.add_argument("--out", type=Path, help="trace file (default traces/<mode>.jsonl)")
+    parser.add_argument("--append", action="store_true",
+                        help="keep other cases already in the trace file and replace only these")
     args = parser.parse_args(argv)
 
     cases = [q for q in QUESTIONS if args.cases == "all" or q[0] in args.cases.split(",")]
@@ -45,7 +47,18 @@ def main(argv=None) -> int:
 
     load_dotenv(ROOT / ".env")
     out = args.out or ROOT / "traces" / ("dryrun" if args.dry_run else "") / f"{args.mode}.jsonl"
-    if out.exists():
+    answers_path = out.with_name(f"{args.mode}.answers.json")
+    answers = {}
+    if args.append:
+        # Drop earlier (possibly half-finished) runs of the cases being rerun.
+        rerun = {c for c, _ in cases}
+        if out.exists():
+            kept = [l for l in out.read_text(encoding="utf-8").splitlines()
+                    if l.strip() and json.loads(l).get("case_id") not in rerun]
+            out.write_text("".join(l + "\n" for l in kept), encoding="utf-8")
+        if answers_path.exists():
+            answers = {k: v for k, v in json.loads(answers_path.read_text(encoding="utf-8")).items() if k not in rerun}
+    elif out.exists():
         out.unlink()  # one file per batch, so before/after compare like for like
 
     if args.dry_run:
@@ -62,7 +75,6 @@ def main(argv=None) -> int:
 
     agent = AGENTS[args.mode]
     stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    answers = {}
 
     def handle_ticket(question: str):
         return agent(llm, question)
@@ -80,13 +92,13 @@ def main(argv=None) -> int:
             print(f"intent:  {result.intent}\ncheck:   {result.check}\nsummary: {result.summary}")
             print(f"answer:\n{result.answer}", flush=True)
             answers[case_id] = {"question": question, **result.__dict__}
+            # Saved after every ticket so a crash keeps the finished ones.
+            answers_path.write_text(json.dumps(answers, indent=2, ensure_ascii=False), encoding="utf-8")
     finally:
         if not args.dry_run:
             neatlogs.flush()
             neatlogs.shutdown()
 
-    answers_path = out.with_name(f"{args.mode}.answers.json")
-    answers_path.write_text(json.dumps(answers, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"\nTraces: {out}\nAnswers: {answers_path}")
     return 0
 

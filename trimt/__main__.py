@@ -91,6 +91,16 @@ def main(argv=None) -> int:
     )
     print(f"\nReport: {args.out}")
 
+    summary = {
+        "runs": [
+            {"run_id": r.run_id, "case_id": r.case_id, "cost_now": r.cost_now, "cost_after_est": r.cost_after,
+             "measured_after": (measured or {}).get(r.case_id), "verdict": verdicts.get(r.case_id)}
+            for r in results
+        ],
+    }
+    summary_path = args.out.with_name(args.out.stem + ".summary.json")
+    summary_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
+
     if args.json:
         args.json.write_text(
             json.dumps([f.to_dict() for r in results for f in r.findings], indent=2), encoding="utf-8"

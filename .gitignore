@@ -4,3 +4,7 @@ __pycache__/
 traces/*.log
 traces/dryrun/
 reports/preview.html
+video/frames/
+video/*.mp4
+video/music.wav
+video/render.log

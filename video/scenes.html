@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Trim-T explainer</title>
+<link href="fonts/fonts.css" rel="stylesheet"><!-- local copy of Geist from Google Fonts -->
+<style>
+:root{--paper:#F4F5F2;--ink:#15171A;--muted:#5D6168;--rule:#D9DBD5;--red:#D9381E;--green:#1F7A4D}
+*{box-sizing:border-box;margin:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--paper);color:var(--ink);font-family:Geist,sans-serif}
+.mono{font-family:"Geist Mono",monospace}
+.abs{position:absolute}
+.center{left:50%;top:50%;transform:translate(-50%,-50%)}
+.scene{position:absolute;inset:0;opacity:0}
+
+/* soft brand blobs, like the reference's floating gradients */
+.blob{position:absolute;border-radius:50%;filter:blur(3px);opacity:.62}
+.b1{width:420px;height:420px;left:1340px;top:-90px;background:radial-gradient(circle at 30% 30%,#FFD2C2,#FF8A65 45%,#D9381E 80%)}
+.b2{width:260px;height:260px;left:-60px;top:760px;background:radial-gradient(circle at 35% 30%,#FFE3D8,#FF9C7A 50%,#E0532F 85%)}
+.b3{width:150px;height:150px;left:180px;top:120px;background:radial-gradient(circle at 35% 30%,#FFF0EA,#FFB49A 55%,#F06A45)}
+.b4{width:340px;height:340px;left:1500px;top:820px;background:radial-gradient(circle at 30% 30%,#FFE9E1,#FFAA8C 50%,#D9381E 90%)}
+.dot{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--red);opacity:.5}
+
+.headline{font-weight:800;font-size:96px;letter-spacing:-.04em;line-height:1.02;text-align:center;white-space:nowrap}
+.red{color:var(--red)}
+.sub{font-size:34px;color:var(--muted);text-align:center;white-space:nowrap}
+
+.chip{position:absolute;background:#fff;border:1px solid var(--rule);border-radius:18px;padding:18px 24px;
+  box-shadow:0 18px 40px rgba(21,23,26,.08);font-size:24px;display:flex;align-items:center;gap:14px;white-space:nowrap}
+.chip .ic{width:44px;height:44px;border-radius:12px;background:#FCE7E2;color:var(--red);display:grid;place-items:center;
+  font:600 22px "Geist Mono",monospace}
+.chip b{font-family:"Geist Mono",monospace;font-weight:600}
+
+.logo{font-weight:800;font-size:200px;letter-spacing:-.05em;line-height:1}
+.logo .h{color:var(--red)}
+.cut{position:absolute;height:6px;background:var(--red);border-radius:3px;left:50%;top:50%}
+
+.window{position:absolute;background:#fff;border-radius:16px;box-shadow:0 40px 90px rgba(21,23,26,.16),0 0 0 1px rgba(21,23,26,.06);overflow:hidden}
+.bar{height:46px;display:flex;align-items:center;gap:9px;padding:0 18px;border-bottom:1px solid #ECEDE9;background:#FAFAF8}
+.bar i{width:13px;height:13px;border-radius:50%;background:#E4E5E1}
+.bar i:first-child{background:#FF5F57}.bar i:nth-child(2){background:#FEBC2E}.bar i:nth-child(3){background:#28C840}
+.bar .url{margin-left:18px;font:500 17px "Geist Mono",monospace;color:var(--muted);background:#F0F1ED;padding:6px 16px;border-radius:8px}
+.term{background:#15171A;color:#E8E9E4;font:22px/1.55 "Geist Mono",monospace;padding:26px 30px}
+.term .ln{white-space:pre;overflow:hidden;width:0}
+.term .p{color:#FF8A65}.term .dim{color:#8B9097}.term .ok{color:#7BD3A2}.term .r{color:#FF8A65}
+
+.viewport{position:absolute;left:0;top:46px;right:0;bottom:0;overflow:hidden;background:var(--paper)}
+.shot{position:absolute;left:0;top:0;width:100%}
+.hl{position:absolute;border:4px solid var(--red);border-radius:14px;box-shadow:0 0 0 9999px rgba(21,23,26,.28)}
+
+.switch{position:absolute;display:flex;gap:26px;left:808px}
+.sw{width:84px;height:84px;border-radius:50%;background:#fff;box-shadow:0 10px 26px rgba(21,23,26,.12);display:grid;place-items:center;
+  font:600 30px "Geist Mono",monospace;color:var(--muted);position:relative}
+.sw .fill{position:absolute;inset:0;border-radius:50%;background:var(--red);opacity:0}
+.sw span{position:relative}
+.label{position:absolute;font-size:30px;font-weight:600;white-space:nowrap}
+.label small{display:block;font-size:22px;font-weight:400;color:var(--muted);margin-top:4px;white-space:normal}
+
+.cursor{position:absolute;left:0;top:0;width:44px;height:44px;z-index:50}
+.ripple{position:absolute;width:70px;height:70px;border-radius:50%;border:3px solid var(--red);opacity:0;z-index:49}
+
+.card{position:absolute;background:#fff;border-radius:22px;box-shadow:0 30px 70px rgba(21,23,26,.12);padding:40px 48px}
+.k{font-size:22px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.big{font:600 92px/1.1 "Geist Mono",monospace;margin-top:10px}
+.strike{text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:7px;color:#7A7E85}
+.pill{display:inline-flex;align-items:center;gap:10px;font:600 24px "Geist Mono",monospace;padding:12px 22px;border-radius:99px;border:2px solid var(--green);color:var(--green);background:#fff}
+.btn{display:inline-block;background:var(--ink);color:#fff;font-size:32px;font-weight:600;padding:26px 48px;border-radius:16px;white-space:nowrap}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script src="data.js"></script>
+<script>
+// Every animation is created paused with the Web Animations API; the renderer seeks
+// all of them to the same time for each frame, so output is frame-exact.
+const D = window.DATA;
+const S = document.getElementById("stage");
+const anims = [];
+
+function el(html, parent = S) {
+  const t = document.createElement("template");
+  t.innerHTML = html.trim();
+  const node = t.content.firstChild;
+  parent.appendChild(node);
+  return node;
+}
+// animate `node` from second `start` for `dur` seconds. Only a node's first animation
+// fills backwards; later ones would otherwise override it before they even start.
+const animated = new WeakSet();
+function at(node, start, dur, keyframes, easing = "cubic-bezier(.2,.8,.2,1)") {
+  const fill = animated.has(node) ? "forwards" : "both";
+  animated.add(node);
+  const a = node.animate(keyframes, { delay: start * 1000, duration: dur * 1000, fill, easing });
+  a.pause();
+  anims.push(a);
+  return a;
+}
+// show a scene between two times with short fades
+function scene(start, end) {
+  const s = el(`<div class="scene"></div>`);
+  at(s, start, 0.35, [{ opacity: 0 }, { opacity: 1 }], "linear");
+  at(s, end - 0.35, 0.35, [{ opacity: 1 }, { opacity: 0 }], "linear");
+  return s;
+}
+const pop = (n, t, from = 24) =>
+  at(n, t, 0.6, [{ opacity: 0, transform: `translateY(${from}px) scale(.96)` }, { opacity: 1, transform: "none" }]);
+const popC = (n, t) =>
+  at(n, t, 0.6, [{ opacity: 0, transform: "translate(-50%,-50%) scale(.92)" }, { opacity: 1, transform: "translate(-50%,-50%)" }]);
+
+// ---------- background, always on ----------
+for (const [cls, dx, dy, period] of [["b1", -40, 50, 9], ["b2", 50, -40, 8], ["b3", 30, 40, 7], ["b4", -60, -30, 10]]) {
+  const b = el(`<div class="blob ${cls}"></div>`);
+  for (let k = 0; k < Math.ceil(D.total / period); k++)
+    at(b, k * period, period, [{ transform: "none" }, { transform: `translate(${dx}px,${dy}px) scale(1.06)` }, { transform: "none" }], "ease-in-out");
+}
+for (let i = 0; i < 26; i++) {
+  const x = (i * 337) % 1920, y = (i * 211) % 1080;
+  const d = el(`<div class="dot" style="left:${x}px;top:${y}px;width:${4 + (i % 3) * 3}px;height:${4 + (i % 3) * 3}px"></div>`);
+  at(d, 0, D.total, [{ transform: "none" }, { transform: `translate(${(i % 5 - 2) * 30}px,${-60 - (i % 4) * 25}px)` }], "linear");
+}
+
+// ---------- 1. hook (0 - 4.2) ----------
+{
+  const s = scene(0, 4.2);
+  const h = el(`<div class="headline abs center" style="top:470px">Your AI agent is quietly<br><span class="red">burning money.</span></div>`, s);
+  popC(h, 0.3);
+  const sub = el(`<div class="sub abs center" style="top:650px">Every step pays premium prices. Nobody checks the receipt.</div>`, s);
+  popC(sub, 1.4);
+}
+
+// ---------- 2. the waste (4.2 - 10) ----------
+{
+  const s = scene(4.2, 10);
+  const h = el(`<div class="headline abs center" style="font-size:78px">Where does it go?</div>`, s);
+  popC(h, 4.4);
+  const chips = [
+    [180, 200, "1", `<b>${D.thinking}</b> thinking tokens for a <b>1-word</b> label`],
+    [1160, 230, "2", `<b>${D.prefix_tokens.toLocaleString()}</b>-token prompt resent <b>${D.prefix_calls}×</b>`],
+    [230, 760, "3", `The <b>same call</b>, made twice`],
+    [1120, 740, "$", `<b>${D.premium}</b> for a "classify" step`],
+  ];
+  chips.forEach(([x, y, ic, text], i) => {
+    const c = el(`<div class="chip" style="left:${x}px;top:${y}px"><div class="ic">${ic}</div><div>${text}</div></div>`, s);
+    pop(c, 5.0 + i * 0.55);
+    at(c, 5.6 + i * 0.55, 4, [{ transform: "none" }, { transform: `translateY(${i % 2 ? -10 : 10}px)` }], "ease-in-out");
+  });
+}
+
+// ---------- 3. logo (10 - 13.6) ----------
+{
+  const s = scene(10, 13.6);
+  const logo = el(`<div class="logo abs center" style="top:470px">Trim<span class="h">-</span>T</div>`, s);
+  popC(logo, 10.2);
+  const cut = el(`<div class="cut" style="top:470px;width:0;transform:translate(-50%,-50%) rotate(-8deg)"></div>`, s);
+  at(cut, 10.75, 0.45, [{ width: "0px", opacity: 1 }, { width: "980px", opacity: 1 }], "cubic-bezier(.7,0,.3,1)");
+  at(cut, 11.25, 0.3, [{ opacity: 1 }, { opacity: 0 }], "linear");
+  const tag = el(`<div class="sub abs center" style="top:640px;font-size:42px;color:var(--ink)">Trim the tokens, <span class="red">keep the answers.</span></div>`, s);
+  popC(tag, 11.4);
+}
+
+// ---------- 4. terminal (13.6 - 20.4) ----------
+{
+  const s = scene(13.6, 20.4);
+  const cap = el(`<div class="label" style="left:120px;top:250px;font-size:44px;line-height:1.25">Point it at your<br>agent's traces.<small style="font-size:26px;margin-top:18px">Every call is traced with neatlogs<br>and saved locally.</small></div>`, s);
+  pop(cap, 13.8);
+  const w = el(`<div class="window" style="left:760px;top:180px;width:1040px;height:720px"><div class="bar"><i></i><i></i><i></i><span class="url">TrimT — terminal</span></div><div class="term"></div></div>`, s);
+  at(w, 13.7, 0.8, [{ opacity: 0, transform: "translateY(80px)" }, { opacity: 1, transform: "none" }]);
+  const term = w.querySelector(".term");
+  let t = 14.5;
+  for (const [cls, text, speed] of D.terminal) {
+    const ln = el(`<div class="ln ${cls}"></div>`, term);
+    ln.textContent = text;
+    const chars = Math.max(text.length, 1);
+    const dur = speed === "type" ? Math.min(chars * 0.028, 1.4) : 0.12;
+    at(ln, t, dur, [{ width: "0ch" }, { width: `${chars + 1}ch` }], speed === "type" ? `steps(${chars})` : "linear");
+    t += dur + (speed === "type" ? 0.25 : 0.07);
+  }
+}
+
+// ---------- 5. the receipt, view by view (20.4 - 33.4) ----------
+{
+  const s = scene(20.4, 33.4);
+  const W = 1360, H = 700, left = (1920 - W) / 2, top = 70;
+  const scale = W / D.shot.width;
+  const w = el(`<div class="window" style="left:${left}px;top:${top}px;width:${W}px;height:${H}px"><div class="bar"><i></i><i></i><i></i><span class="url">reports/report.html</span></div><div class="viewport"><img class="shot" src="${D.shot.file}"></div></div>`, s);
+  at(w, 20.5, 0.8, [{ opacity: 0, transform: "translateY(90px)" }, { opacity: 1, transform: "none" }]);
+  const img = w.querySelector(".shot");
+  const vh = H - 46;
+  const y = (box) => -Math.max(0, (box.y + box.h / 2) * scale - vh / 2);
+
+  // icons under the window, like the reference's view switcher
+  const sw = el(`<div class="switch" style="top:${top + H + 46}px"></div>`, s);
+  const labels = ["1", "2", "3"];
+  const icons = labels.map((l) => el(`<div class="sw"><div class="fill"></div><span>${l}</span></div>`, sw));
+  pop(sw, 21.0);
+
+  const caption = el(`<div class="label" style="left:${left}px;top:${top + H + 40}px;width:480px;white-space:normal"></div>`, s);
+  const hl = el(`<div class="hl" style="opacity:0"></div>`, w.querySelector(".viewport"));
+
+  // timeline of views: [time, box, caption title, caption detail]
+  const views = D.findings.map((f, i) => [22.6 + i * 2.9, f.box, f.title, f.detail]);
+  const stops = [[20.5, { y: 0, h: 0 }], [21.6, D.receipt_box]];
+  views.forEach(([tt, box]) => stops.push([tt, box]));
+  stops.push([22.6 + views.length * 2.9, D.total_box]);
+  let prev = 0;
+  for (const [tt, box] of stops.slice(1)) {
+    const to = y(box);
+    at(img, tt, 0.9, [{ transform: `translateY(${prev}px)` }, { transform: `translateY(${to}px)` }]);
+    prev = to;
+  }
+
+  // highlight follows each finding, then the total
+  [...views.map(([tt, box]) => [tt, box]), [22.6 + views.length * 2.9, D.total_box]].forEach(([tt, box], i, arr) => {
+    const r = { left: (box.x - 10) * scale, top: (box.y - 10) * scale + y(box), width: (box.w + 20) * scale, height: (box.h + 20) * scale };
+    const frame = { left: `${r.left}px`, top: `${r.top}px`, width: `${r.width}px`, height: `${r.height}px` };
+    at(hl, tt + 0.55, 0.4, [{ ...frame, opacity: 0 }, { ...frame, opacity: 1 }]);
+    if (i < arr.length - 1) at(hl, arr[i + 1][0] - 0.05, 0.05, [{ opacity: 1 }, { opacity: 0 }], "linear");
+  });
+
+  // captions
+  views.forEach(([tt, , title, detail], i) => {
+    const c = el(`<div class="label" style="opacity:0">${title}<small>${detail}</small></div>`, caption);
+    c.style.position = "absolute";
+    at(c, tt + 0.5, 0.4, [{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "none" }]);
+    at(c, tt + 2.75, 0.2, [{ opacity: 1 }, { opacity: 0 }], "linear");
+  });
+  const tot = el(`<div class="label" style="opacity:0;position:absolute">Total per ticket<small>All fixes applied together, never counted twice</small></div>`, caption);
+  at(tot, 22.6 + views.length * 2.9 + 0.5, 0.4, [{ opacity: 0 }, { opacity: 1 }]);
+
+  // cursor clicks each icon
+  const cursor = el(`<svg class="cursor" viewBox="0 0 24 24" style="opacity:0"><path d="M4 2l15 9.5-6.6 1.3 3.9 7.5-3 1.5-3.9-7.6L4 19z" fill="#15171A" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>`, s);
+  const ripple = el(`<div class="ripple"></div>`, s);
+  const iconPos = (i) => [960 + (i - 1) * 110 - 4, top + H + 46 + 44];
+  at(cursor, 21.4, 0.4, [{ opacity: 0, transform: "translate(1500px,1000px)" }, { opacity: 1, transform: "translate(1400px,960px)" }]);
+  let from = [1400, 960];
+  views.forEach(([tt], i) => {
+    const [cx, cy] = iconPos(i);
+    at(cursor, tt - 0.55, 0.55, [{ transform: `translate(${from[0]}px,${from[1]}px)` }, { transform: `translate(${cx}px,${cy}px)` }]);
+    at(cursor, tt, 0.18, [{ transform: `translate(${cx}px,${cy}px) scale(1)` }, { transform: `translate(${cx}px,${cy}px) scale(.85)` }, { transform: `translate(${cx}px,${cy}px) scale(1)` }], "linear");
+    at(ripple, tt, 0.5, [
+      { opacity: 0, transform: `translate(${cx - 35}px,${cy - 35}px) scale(.4)` },
+      { opacity: .9, offset: 0.05 },
+      { opacity: 0, transform: `translate(${cx - 35}px,${cy - 35}px) scale(1.4)` },
+    ], "ease-out");
+    at(icons[i].querySelector(".fill"), tt, 0.25, [{ opacity: 0 }, { opacity: 1 }]);
+    at(icons[i].querySelector("span"), tt, 0.25, [{ color: "#5D6168" }, { color: "#ffffff" }]);
+    if (i < views.length - 1) {
+      at(icons[i].querySelector(".fill"), views[i + 1][0], 0.25, [{ opacity: 1 }, { opacity: 0 }]);
+      at(icons[i].querySelector("span"), views[i + 1][0], 0.25, [{ color: "#ffffff" }, { color: "#5D6168" }]);
+    }
+    from = [cx, cy];
+  });
+  at(cursor, 22.6 + views.length * 2.9 - 0.3, 0.6, [{ transform: `translate(${from[0]}px,${from[1]}px)` }, { transform: `translate(1700px,1000px)` }]);
+}
+
+// ---------- 6. proof (33.4 - 39.6) ----------
+{
+  const s = scene(33.4, 39.6);
+  const h = el(`<div class="headline abs center" style="top:150px;font-size:66px">Fixed, then rerun on the same ${D.n_measured > 1 ? "tickets" : "ticket"}.</div>`, s);
+  popC(h, 33.5);
+  const before = el(`<div class="card" style="left:260px;top:280px;width:620px"><div class="k">Before · per ticket</div><div class="big strike">${D.before}</div></div>`, s);
+  pop(before, 34.0, 40);
+  const after = el(`<div class="card" style="left:1040px;top:280px;width:620px"><div class="k">After · per ticket</div><div class="big">${D.after}</div></div>`, s);
+  pop(after, 34.5, 40);
+  const pct = el(`<div class="abs center" style="top:690px;font:800 150px/1 Geist,sans-serif;letter-spacing:-.04em;color:var(--red)">−${D.pct}%</div>`, s);
+  at(pct, 35.2, 0.7, [{ opacity: 0, transform: "translate(-50%,-50%) scale(.6)" }, { opacity: 1, transform: "translate(-50%,-50%) scale(1)" }], "cubic-bezier(.3,1.5,.5,1)");
+  const per = el(`<div class="sub abs center" style="top:800px;font-size:30px">${D.per1k_before} → <b style="color:var(--ink)">${D.per1k_after}</b> per 1,000 tickets</div>`, s);
+  popC(per, 35.8);
+  const pills = el(`<div class="abs center" style="top:900px;display:flex;gap:18px">${D.verdicts.map((v) => `<span class="pill">✓ ${v}</span>`).join("")}</div>`, s);
+  popC(pills, 36.5);
+}
+
+// ---------- 7. end card (39.6 - total) ----------
+{
+  const s = scene(39.6, D.total + 0.4);
+  const logo = el(`<div class="logo abs center" style="top:360px;font-size:150px">Trim<span class="h">-</span>T</div>`, s);
+  popC(logo, 39.8);
+  const url = el(`<div class="abs center mono" style="top:510px;font-size:36px;font-weight:500">github.com/collex89/TrimT</div>`, s);
+  popC(url, 40.3);
+  const btnWrap = el(`<div class="abs" style="left:0;right:0;top:600px;text-align:center"><div class="btn">Find your agent's waste</div></div>`, s);
+  pop(btnWrap, 40.7);
+  const btn = btnWrap.querySelector(".btn");
+  const cur = el(`<svg class="cursor" viewBox="0 0 24 24"><path d="M4 2l15 9.5-6.6 1.3 3.9 7.5-3 1.5-3.9-7.6L4 19z" fill="#15171A" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>`, s);
+  at(cur, 41.2, 0.7, [{ transform: "translate(1300px,900px)" }, { transform: "translate(1010px,650px)" }]);
+  at(btn, 42.0, 0.2, [{ transform: "scale(1)" }, { transform: "scale(.95)" }, { transform: "scale(1)" }], "linear");
+  const foot = el(`<div class="sub abs center" style="top:820px;font-size:26px">Built on neatlogs traces · neatHack 2026</div>`, s);
+  popC(foot, 41.0);
+}
+
+window.seek = (t) => { for (const a of anims) a.currentTime = t * 1000; };
+window.ready = Promise.all([document.fonts.ready, ...[...document.images].map((i) => i.decode().catch(() => {}))]);
+window.seek(Number(new URLSearchParams(location.search).get("t") || 0));
+</script>
+</body>
+</html>

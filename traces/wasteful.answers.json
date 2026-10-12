@@ -1,0 +1,16 @@
+{
+  "q1": {
+    "question": "Hi, my parcel SB4K2P9QXT has said In transit since Tuesday and it's going from Lagos to Abuja. Is it lost? What should I do?",
+    "intent": "tracking",
+    "answer": "Hello. Deliveries between Lagos and Abuja take 2 to 3 working days, and a parcel can show In transit for up to 48 hours during transport between cities without a new scan. This is normal, so your parcel is not considered lost. \n\nI cannot see live parcel locations from here. If your parcel has had no new scan for more than 72 hours, please open a tracking request in the app under Help > My parcel > Tracking problem so the hub team can look into it for you.",
+    "check": "PASS. The draft follows all handbook guidelines, uses accurate facts from the knowledge base, stays under the word limit, and ends with a clear next step.",
+    "summary": "P3: General tracking enquiry for parcel SB4K2P9QXT in transit from Lagos to Abuja."
+  },
+  "q3": {
+    "question": "My vase arrived broken yesterday. The delivery was due on Monday. Can I still get my money back?",
+    "intent": "claim",
+    "answer": "Hello, I am sorry to hear that your vase arrived broken. Yes, you can still make a claim, as you are within the 7-day window from your expected delivery date.\n\nHere is what to do in the app:\n1. Go to Help > My parcel > Make a claim.\n2. Upload clear photos of the broken vase, the packaging and the outside of the parcel before throwing anything away.\n\nClaims are reviewed within 3 working days. If your claim is approved, the payout will be sent to your original payment method.\n\nPlease open the app and submit your claim under Help > My parcel > Make a claim to get started.",
+    "check": "PASS. The draft follows all handbook guidelines, accurately reflects the 7-day claim window and damage claim process from the knowledge base, uses the required conditional phrasing for refunds, and ends with a clear next step.",
+    "summary": "P2: Customer reported a damaged parcel (broken vase) and was guided to submit an in-app claim."
+  }
+}

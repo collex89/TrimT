@@ -1,0 +1,9 @@
+{
+  "q1": {
+    "question": "Hi, my parcel SB4K2P9QXT has said In transit since Tuesday and it's going from Lagos to Abuja. Is it lost? What should I do?",
+    "intent": "tracking",
+    "answer": "Hello. Deliveries from Lagos to Abuja take 2 to 3 working days. It is normal for parcels moving between cities to show In transit for up to 48 hours without an update, so your parcel is likely still on its way.\n\nI cannot view live parcel locations directly. If there has been no new scan for more than 72 hours, please submit a tracking request in the SwiftBox app by going to Help > My parcel > Tracking problem.",
+    "check": "PASS. The draft accurately reflects the delivery timelines and tracking policy from the knowledge base while adhering to the voice and formatting guidelines.",
+    "summary": "P3: Customer inquiring about transit status for parcel SB4K2P9QXT; advised on standard delivery timelines and tracking request process."
+  }
+}

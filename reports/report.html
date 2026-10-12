@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Trim-T report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;800&family=Geist+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F4F5F2;--card:#FFFFFF;--ink:#15171A;--muted:#5D6168;--rule:#D9DBD5;--red:#D9381E;--green:#1F7A4D}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 Geist,system-ui,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:40px 16px 80px}
+.mono,.num{font-family:"Geist Mono",ui-monospace,monospace}
+.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;
+  border-bottom:2px solid var(--ink);padding-bottom:16px}
+.brand{font:800 44px/1 Geist,sans-serif;letter-spacing:-.04em}
+.brand span{color:var(--red)}
+.tag{color:var(--muted);margin-top:6px}
+.meta{font:12px/1.6 "Geist Mono",monospace;color:var(--muted);text-align:right}
+.hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:28px 0}
+.stat{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:16px}
+.stat .k{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.stat .v{font:600 26px/1.2 "Geist Mono",monospace;margin-top:6px}
+.stat .s{font-size:12px;color:var(--muted)}
+.strike{text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:2px;color:var(--muted)}
+.red{color:var(--red)} .green{color:var(--green)}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:40px 0 12px}
+.receipt{background:var(--card);border:1px solid var(--rule);border-radius:4px;padding:24px 24px 20px;margin-bottom:24px;
+  box-shadow:0 1px 0 var(--rule);position:relative}
+.receipt::after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:8px;
+  background:radial-gradient(circle at 6px 0,transparent 6px,var(--card) 6.5px) 0 0/12px 8px repeat-x}
+.rhead{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font:13px "Geist Mono",monospace;
+  border-bottom:1px dashed var(--rule);padding-bottom:10px;margin-bottom:10px}
+.q{color:var(--muted);font-size:14px;margin:0 0 12px}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+td{padding:6px 0;vertical-align:top;overflow-wrap:anywhere}
+td.r{text-align:right;padding-left:12px;width:9.5em}
+.calls td{font:12.5px "Geist Mono",monospace;color:var(--muted);padding:3px 0}
+.item{border-top:1px dashed var(--rule)}
+.item .lbl{font-weight:600}
+.item .ev{color:var(--muted);font-size:13.5px}
+.item .fix{font-size:13.5px;margin-top:2px}
+.item .fix::before{content:"→ ";color:var(--red)}
+.total td{border-top:2px solid var(--ink);padding-top:10px;font-weight:700}
+.total .num{font-size:17px}
+.grand{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:4px 12px;
+  border-top:2px solid var(--ink);padding-top:10px;margin-top:6px;font-weight:700}
+.grand .num{font-size:20px}
+.pill{display:inline-block;font:600 11px/1 "Geist Mono",monospace;padding:4px 7px;border-radius:99px;border:1px solid currentColor}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.cmp div{font-size:13.5px;background:var(--paper);border-radius:6px;padding:10px 12px;white-space:pre-wrap}
+.cmp b{display:block;font:600 11px "Geist Mono",monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px}
+.note{font-size:12.5px;color:var(--muted);margin-top:32px;border-top:1px solid var(--rule);padding-top:12px}
+@media (max-width:600px){.brand{font-size:34px}.meta{text-align:left}.cmp{grid-template-columns:1fr}.receipt{padding:18px 14px}}
+</style></head>
+<body><div class="wrap">
+<header>
+  <div><div class="brand">Trim<span>-</span>T</div><div class="tag">Trim the tokens, keep the answers.</div></div>
+  <div class="meta">2 runs · 12 LLM calls<br>wasteful.jsonl, fixed.jsonl<br>2026-10-12 08:26</div>
+</header>
+<div class="hero">
+  <div class="stat"><div class="k">Cost per run</div><div class="v"><span class="strike">$0.02200</span></div>
+    <div class="s num red">$0.00478 after fixes</div></div>
+  <div class="stat"><div class="k">Per 1,000 runs</div><div class="v">$4.78</div>
+    <div class="s num">was $22.00</div></div>
+  <div class="stat"><div class="k">Estimated saving</div><div class="v red">−78%</div>
+    <div class="s">6 findings</div></div>
+  <div class="stat"><div class="k">Measured after fixes</div>
+  <div class="v green">−74%</div><div class="s num">$0.02126 → $0.00556</div></div>
+</div>
+<h2>Receipts · one per run</h2>
+
+<section class="receipt">
+  <div class="rhead"><span>RUN wasteful-20261012-081021-q1</span><span>6 LLM calls</span></div>
+  <p class="q">“Hi, my parcel SB4K2P9QXT has said In transit since Tuesday and it&#x27;s going from Lagos to Abuja. Is it lost? What should I do?”</p>
+  <table class="calls"><tr><td> 0. classify_intent · gemini-3.8-flash · 2,277 in / 283 out (282 thinking)</td><td class="r num"><span class="strike">$0.00277</span> $0.00057</td></tr><tr><td> 1. extract_keywords · gemini-3.8-flash · 2,257 in / 403 out (384 thinking)</td><td class="r num"><span class="strike">$0.00320</span> $0.00010</td></tr><tr><td> 2. draft_answer · gemini-3.8-flash · 2,271 in / 704 out (598 thinking)</td><td class="r num"><span class="strike">$0.00434</span> $0.00285</td></tr><tr><td> 3. extract_keywords · gemini-3.8-flash · 2,257 in / 394 out (375 thinking)</td><td class="r num"><span class="strike">$0.00317</span> $0.00000</td></tr><tr><td> 4. check_answer · gemini-3.8-flash · 2,394 in / 604 out (573 thinking)</td><td class="r num"><span class="strike">$0.00406</span> $0.00015</td></tr><tr><td> 5. summarise_ticket · gemini-3.8-flash · 2,374 in / 516 out (493 thinking)</td><td class="r num"><span class="strike">$0.00372</span> $0.00013</td></tr></table>
+  <table><tr class="item"><td><div class="lbl">Overpowered model <span class="mono" style="font-weight:400">· classify_intent, extract_keywords, check_answer, summarise_ticket</span></div><div class="ev">4 simple steps on gemini-3.8-flash: classify_intent (1-token answer); extract_keywords (19-token answer, x2); check_answer (31-token answer); summarise_ticket (23-token answer). Avg 421 billed thinking tokens per call</div><div class="fix">Run classify_intent, extract_keywords, check_answer, summarise_ticket on gemini-3.1-flash-lite (no thinking tokens); these are short, simple tasks.</div></td><td class="r num"><span class="strike">$0.01692</span><br><span class="red">$0.00303</span></td></tr><tr class="item"><td><div class="lbl">Repeated prompt <span class="mono" style="font-weight:400">· classify_intent, extract_keywords, draft_answer, check_answer, summarise_ticket</span></div><div class="ev">2,197-token shared prompt prefix sent in 6 calls</div><div class="fix">Cache the shared system prompt so it is billed at the cached rate after the first call, or trim it to what each step needs.</div></td><td class="r num"><span class="strike">$0.00989</span><br><span class="red">$0.00247</span></td></tr><tr class="item"><td><div class="lbl">Redundant call <span class="mono" style="font-weight:400">· extract_keywords</span></div><div class="ev">Identical request to gemini-3.8-flash made 2 times (calls 1, 3)</div><div class="fix">Reuse the result of the first extract_keywords call instead of asking again.</div></td><td class="r num"><span class="strike">$0.00317</span><br><span class="red">$0.00000</span></td></tr></table>
+  <div class="grand"><span>Total per run <span class="pill red">−82%</span></span>
+    <span class="num"><span class="strike">$0.02126</span> $0.00381</span></div>
+</section>
+<section class="receipt">
+  <div class="rhead"><span>RUN wasteful-20261012-081021-q3</span><span>6 LLM calls</span></div>
+  <p class="q">“My vase arrived broken yesterday. The delivery was due on Monday. Can I still get my money back?”</p>
+  <table class="calls"><tr><td> 0. classify_intent · gemini-3.8-flash · 2,261 in / 172 out (171 thinking)</td><td class="r num"><span class="strike">$0.00234</span> $0.00057</td></tr><tr><td> 1. extract_keywords · gemini-3.8-flash · 2,241 in / 230 out (219 thinking)</td><td class="r num"><span class="strike">$0.00254</span> $0.00008</td></tr><tr><td> 2. draft_answer · gemini-3.8-flash · 2,247 in / 1,220 out (1,085 thinking)</td><td class="r num"><span class="strike">$0.00626</span> $0.00478</td></tr><tr><td> 3. extract_keywords · gemini-3.8-flash · 2,241 in / 433 out (422 thinking)</td><td class="r num"><span class="strike">$0.00330</span> $0.00000</td></tr><tr><td> 4. check_answer · gemini-3.8-flash · 2,399 in / 829 out (786 thinking)</td><td class="r num"><span class="strike">$0.00491</span> $0.00017</td></tr><tr><td> 5. summarise_ticket · gemini-3.8-flash · 2,387 in / 426 out (403 thinking)</td><td class="r num"><span class="strike">$0.00339</span> $0.00014</td></tr></table>
+  <table><tr class="item"><td><div class="lbl">Overpowered model <span class="mono" style="font-weight:400">· classify_intent, extract_keywords, check_answer, summarise_ticket</span></div><div class="ev">4 simple steps on gemini-3.8-flash: classify_intent (1-token answer); extract_keywords (11-token answer, x2); check_answer (43-token answer); summarise_ticket (23-token answer). Avg 400 billed thinking tokens per call</div><div class="fix">Run classify_intent, extract_keywords, check_answer, summarise_ticket on gemini-3.1-flash-lite (no thinking tokens); these are short, simple tasks.</div></td><td class="r num"><span class="strike">$0.01648</span><br><span class="red">$0.00302</span></td></tr><tr class="item"><td><div class="lbl">Repeated prompt <span class="mono" style="font-weight:400">· classify_intent, extract_keywords, draft_answer, check_answer, summarise_ticket</span></div><div class="ev">2,186-token shared prompt prefix sent in 6 calls</div><div class="fix">Cache the shared system prompt so it is billed at the cached rate after the first call, or trim it to what each step needs.</div></td><td class="r num"><span class="strike">$0.00984</span><br><span class="red">$0.00246</span></td></tr><tr class="item"><td><div class="lbl">Redundant call <span class="mono" style="font-weight:400">· extract_keywords</span></div><div class="ev">Identical request to gemini-3.8-flash made 2 times (calls 1, 3)</div><div class="fix">Reuse the result of the first extract_keywords call instead of asking again.</div></td><td class="r num"><span class="strike">$0.00330</span><br><span class="red">$0.00000</span></td></tr></table>
+  <div class="grand"><span>Total per run <span class="pill red">−75%</span></span>
+    <span class="num"><span class="strike">$0.02274</span> $0.00575</span></div>
+</section>
+<h2>Before vs after · same questions, rerun with the fixes</h2>
+<section class="receipt">
+  <div class="rhead"><span>CASE q1 · measured</span><span><span class="pill green">SAME</span></span></div>
+  <table>
+    <tr><td>Before (6 calls)</td><td class="r num"><span class="strike">$0.02126</span></td></tr>
+    <tr><td>After fixes (5 calls)</td><td class="r num">$0.00556</td></tr>
+    <tr class="total"><td>Saved <span class="pill red">−74%</span></td>
+      <td class="r num">$0.01570</td></tr>
+  </table><div class="cmp">
+  <div><b>Before · intent tracking</b>Hello. Deliveries between Lagos and Abuja take 2 to 3 working days, and a parcel can show In transit for up to 48 hours during transport between cities without a new scan. This is normal, so your parcel is not considered lost. 
+
+I cannot see live parcel locations from here. If your parcel has had no new scan for more than 72 hours, please open a tracking request in the app under Help &gt; My parcel &gt; Tracking problem so the hub team can look into it for you.</div>
+  <div><b>After · intent tracking</b>Hello. Deliveries from Lagos to Abuja take 2 to 3 working days. It is normal for parcels moving between cities to show In transit for up to 48 hours without an update, so your parcel is likely still on its way.
+
+I cannot view live parcel locations directly. If there has been no new scan for more than 72 hours, please submit a tracking request in the SwiftBox app by going to Help &gt; My parcel &gt; Tracking problem.</div></div>
+  <p class="q" style="margin-top:8px">Answer check: SAME: Both replies provide the same delivery timeframe, explain the 48-hour transit scan policy, confirm the parcel is not considered lost, and provide the exact same 72-hour threshold and navigation path for submitting a tracking request.</p>
+</section>
+<p class="note">Costs use the paid-tier list prices in pricing.yaml (https://ai.google.dev/gemini-api/docs/pricing). Each line's saving is
+computed on its own; run totals apply every fix together, so they never count a saving twice. Suggestions may be
+worded by a model, but every number on this page is computed from the traces and the price file.</p>
+</div></body></html>
