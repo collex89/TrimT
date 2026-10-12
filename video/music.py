@@ -13,7 +13,7 @@ import numpy as np
 
 SR = 44_100
 BPM = 100
-DURATION = 44.0
+DURATION = 71.0
 OUT = Path(__file__).resolve().parent / "music.wav"
 
 BEAT = 60 / BPM

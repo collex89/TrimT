@@ -1,5 +1,5 @@
 window.DATA = {
- "total": 44.0,
+ "total": 71.0,
  "premium": "gemini-3.8-flash",
  "thinking": 282,
  "prefix_tokens": 2197,
@@ -122,5 +122,51 @@ window.DATA = {
  "verdicts": [
   "q1 same answer"
  ],
- "n_measured": 1
+ "n_measured": 1,
+ "calls": [
+  {
+   "step": "classify_intent",
+   "model": "gemini-3.8-flash",
+   "inp": 2277,
+   "out": 283,
+   "cost": "$0.00277"
+  },
+  {
+   "step": "extract_keywords",
+   "model": "gemini-3.8-flash",
+   "inp": 2257,
+   "out": 403,
+   "cost": "$0.00320"
+  },
+  {
+   "step": "draft_answer",
+   "model": "gemini-3.8-flash",
+   "inp": 2271,
+   "out": 704,
+   "cost": "$0.00434"
+  },
+  {
+   "step": "extract_keywords",
+   "model": "gemini-3.8-flash",
+   "inp": 2257,
+   "out": 394,
+   "cost": "$0.00317"
+  },
+  {
+   "step": "check_answer",
+   "model": "gemini-3.8-flash",
+   "inp": 2394,
+   "out": 604,
+   "cost": "$0.00406"
+  },
+  {
+   "step": "summarise_ticket",
+   "model": "gemini-3.8-flash",
+   "inp": 2374,
+   "out": 516,
+   "cost": "$0.00372"
+  }
+ ],
+ "ticket_cost": "$0.02126",
+ "ticket_per1k": "$21.26"
 };

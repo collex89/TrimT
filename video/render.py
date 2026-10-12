@@ -30,7 +30,7 @@ from trimt.report import DETECTOR_LABELS, money  # noqa: E402
 
 VIDEO = ROOT / "video"
 FPS = 30
-TOTAL = 44.0
+TOTAL = 71.0
 SHOT_WIDTH = 1200
 
 TITLES = {
@@ -131,6 +131,13 @@ def build_data(browser, before_path: Path, report: Path) -> dict:
         "per1k_after": money(after * 1000),
         "verdicts": verdicts or ["answers compared"],
         "n_measured": len(rows),
+        "calls": [
+            {"step": c.step, "model": c.model, "inp": c.input_tokens, "out": c.output_tokens,
+             "cost": money(pricing.call_cost(c))}
+            for c in calls
+        ],
+        "ticket_cost": money(first.cost_now),
+        "ticket_per1k": money(first.cost_now * 1000),
     }
 
 

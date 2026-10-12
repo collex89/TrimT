@@ -24,23 +24,47 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:var(--paper);col
 .headline{font-weight:800;font-size:96px;letter-spacing:-.04em;line-height:1.02;text-align:center;white-space:nowrap}
 .red{color:var(--red)}
 .sub{font-size:34px;color:var(--muted);text-align:center;white-space:nowrap}
+.kicker{font:600 22px "Geist Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--red);text-align:center;white-space:nowrap}
 
-.chip{position:absolute;background:#fff;border:1px solid var(--rule);border-radius:18px;padding:18px 24px;
-  box-shadow:0 18px 40px rgba(21,23,26,.08);font-size:24px;display:flex;align-items:center;gap:14px;white-space:nowrap}
-.chip .ic{width:44px;height:44px;border-radius:12px;background:#FCE7E2;color:var(--red);display:grid;place-items:center;
-  font:600 22px "Geist Mono",monospace}
-.chip b{font-family:"Geist Mono",monospace;font-weight:600}
+/* caption bar: the narration, readable with the sound off */
+.cap{position:absolute;left:50%;top:972px;max-width:1500px;transform:translateX(-50%);background:var(--ink);color:#fff;
+  font-size:31px;line-height:1.3;padding:16px 30px;border-radius:14px;text-align:center;opacity:0;white-space:nowrap}
 
 .logo{font-weight:800;font-size:200px;letter-spacing:-.05em;line-height:1}
 .logo .h{color:var(--red)}
 .cut{position:absolute;height:6px;background:var(--red);border-radius:3px;left:50%;top:50%}
+
+/* problem scene: one ticket as six calls */
+.call{position:absolute;width:262px;height:228px;background:#fff;border:1px solid var(--rule);border-radius:18px;
+  box-shadow:0 18px 40px rgba(21,23,26,.08);padding:20px 22px}
+.call .n{font:600 18px "Geist Mono",monospace;color:var(--muted)}
+.call .s{font:600 22px "Geist Mono",monospace;margin-top:8px;white-space:nowrap}
+.call .m{display:inline-block;margin-top:14px;font:500 16px "Geist Mono",monospace;padding:5px 10px;border-radius:8px;background:#F0F1ED;color:var(--muted)}
+.call .m.hot{background:#FCE7E2;color:var(--red)}
+.call .t{font:16px "Geist Mono",monospace;color:var(--muted);margin-top:14px}
+.call .c{font:600 26px "Geist Mono",monospace;margin-top:6px}
+.tag{position:absolute;background:var(--red);color:#fff;font-size:21px;font-weight:600;padding:10px 16px;border-radius:12px;white-space:nowrap}
+.tag::after{content:"";position:absolute;left:28px;bottom:-9px;border:9px solid transparent;border-bottom:0;border-top-color:var(--red)}
+.band{position:absolute;height:64px;border-radius:14px;background:#FCE7E2;border:2px dashed var(--red);color:var(--red);
+  font:600 24px "Geist Mono",monospace;display:flex;align-items:center;justify-content:center;white-space:nowrap}
+
+/* how-it-works scene */
+.step{position:absolute;width:520px;height:470px;background:#fff;border-radius:24px;box-shadow:0 30px 70px rgba(21,23,26,.10);padding:40px 40px}
+.step .num{width:58px;height:58px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font:600 26px "Geist Mono",monospace}
+.step h3{font-size:46px;font-weight:800;letter-spacing:-.03em;margin-top:22px}
+.step p{font-size:26px;line-height:1.4;color:var(--muted);margin-top:14px}
+.step .row{display:flex;gap:14px;align-items:flex-start;margin-top:16px;font-size:24px;line-height:1.3}
+.step .row b{flex:none;width:36px;height:36px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center;font:600 19px "Geist Mono",monospace}
+.step .row span{color:var(--muted)}
+.step .row strong{color:var(--ink);font-weight:600}
+.arrow{position:absolute;font-size:56px;color:var(--red);font-weight:600}
 
 .window{position:absolute;background:#fff;border-radius:16px;box-shadow:0 40px 90px rgba(21,23,26,.16),0 0 0 1px rgba(21,23,26,.06);overflow:hidden}
 .bar{height:46px;display:flex;align-items:center;gap:9px;padding:0 18px;border-bottom:1px solid #ECEDE9;background:#FAFAF8}
 .bar i{width:13px;height:13px;border-radius:50%;background:#E4E5E1}
 .bar i:first-child{background:#FF5F57}.bar i:nth-child(2){background:#FEBC2E}.bar i:nth-child(3){background:#28C840}
 .bar .url{margin-left:18px;font:500 17px "Geist Mono",monospace;color:var(--muted);background:#F0F1ED;padding:6px 16px;border-radius:8px}
-.term{background:#15171A;color:#E8E9E4;font:22px/1.55 "Geist Mono",monospace;padding:26px 30px}
+.term{background:#15171A;color:#E8E9E4;font:22px/1.55 "Geist Mono",monospace;padding:26px 30px;height:100%}
 .term .ln{white-space:pre;overflow:hidden;width:0}
 .term .p{color:#FF8A65}.term .dim{color:#8B9097}.term .ok{color:#7BD3A2}.term .r{color:#FF8A65}
 
@@ -106,6 +130,26 @@ const pop = (n, t, from = 24) =>
   at(n, t, 0.6, [{ opacity: 0, transform: `translateY(${from}px) scale(.96)` }, { opacity: 1, transform: "none" }]);
 const popC = (n, t) =>
   at(n, t, 0.6, [{ opacity: 0, transform: "translate(-50%,-50%) scale(.92)" }, { opacity: 1, transform: "translate(-50%,-50%)" }]);
+// narration caption shown from t0 to t1
+function caption(parent, text, t0, t1) {
+  const c = el(`<div class="cap">${text}</div>`, parent);
+  at(c, t0, 0.35, [{ opacity: 0, transform: "translate(-50%,12px)" }, { opacity: 1, transform: "translate(-50%,0)" }]);
+  at(c, t1 - 0.25, 0.25, [{ opacity: 1 }, { opacity: 0 }], "linear");
+  return c;
+}
+const CURSOR = `<svg class="cursor" viewBox="0 0 24 24"><path d="M4 2l15 9.5-6.6 1.3 3.9 7.5-3 1.5-3.9-7.6L4 19z" fill="#15171A" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>`;
+
+// scene schedule, in seconds
+const T = {
+  hook: [0, 5.5],
+  problem: [5.5, 20],
+  logo: [20, 24],
+  how: [24, 40],
+  term: [40, 46.6],
+  report: [46.6, 59.6],
+  proof: [59.6, 66],
+  end: [66, D.total + 0.4],
+};
 
 // ---------- background, always on ----------
 for (const [cls, dx, dy, period] of [["b1", -40, 50, 9], ["b2", 50, -40, 8], ["b3", 30, 40, 7], ["b4", -60, -30, 10]]) {
@@ -119,54 +163,120 @@ for (let i = 0; i < 26; i++) {
   at(d, 0, D.total, [{ transform: "none" }, { transform: `translate(${(i % 5 - 2) * 30}px,${-60 - (i % 4) * 25}px)` }], "linear");
 }
 
-// ---------- 1. hook (0 - 4.2) ----------
+// ---------- 1. hook ----------
 {
-  const s = scene(0, 4.2);
-  const h = el(`<div class="headline abs center" style="top:470px">Your AI agent is quietly<br><span class="red">burning money.</span></div>`, s);
-  popC(h, 0.3);
-  const sub = el(`<div class="sub abs center" style="top:650px">Every step pays premium prices. Nobody checks the receipt.</div>`, s);
-  popC(sub, 1.4);
+  const [b, e] = T.hook;
+  const s = scene(b, e);
+  const h = el(`<div class="headline abs center" style="top:440px">Your AI agent is quietly<br><span class="red">burning money.</span></div>`, s);
+  popC(h, b + 0.3);
+  const sub = el(`<div class="sub abs center" style="top:630px">Every LLM call is billed by the token. Most agents pay premium prices for every step.</div>`, s);
+  popC(sub, b + 1.5);
 }
 
-// ---------- 2. the waste (4.2 - 10) ----------
+// ---------- 2. the problem: one real ticket, six calls ----------
 {
-  const s = scene(4.2, 10);
-  const h = el(`<div class="headline abs center" style="font-size:78px">Where does it go?</div>`, s);
-  popC(h, 4.4);
-  const chips = [
-    [180, 200, "1", `<b>${D.thinking}</b> thinking tokens for a <b>1-word</b> label`],
-    [1160, 230, "2", `<b>${D.prefix_tokens.toLocaleString()}</b>-token prompt resent <b>${D.prefix_calls}×</b>`],
-    [230, 760, "3", `The <b>same call</b>, made twice`],
-    [1120, 740, "$", `<b>${D.premium}</b> for a "classify" step`],
-  ];
-  chips.forEach(([x, y, ic, text], i) => {
-    const c = el(`<div class="chip" style="left:${x}px;top:${y}px"><div class="ic">${ic}</div><div>${text}</div></div>`, s);
-    pop(c, 5.0 + i * 0.55);
-    at(c, 5.6 + i * 0.55, 4, [{ transform: "none" }, { transform: `translateY(${i % 2 ? -10 : 10}px)` }], "ease-in-out");
+  const [b, e] = T.problem;
+  const s = scene(b, e);
+  const k = el(`<div class="kicker abs" style="left:0;right:0;top:120px">The problem</div>`, s);
+  pop(k, b + 0.2, 10);
+  const h = el(`<div class="headline abs" style="left:0;right:0;top:160px;font-size:72px">One support ticket. Six LLM calls.</div>`, s);
+  pop(h, b + 0.3);
+
+  const left = 130, gap = 18, w = 262, top = 400;
+  const cards = D.calls.map((c, i) => {
+    const node = el(`<div class="call" style="left:${left + i * (w + gap)}px;top:${top}px">
+      <div class="n">CALL ${i + 1}</div><div class="s">${c.step}</div>
+      <div class="m">${c.model}</div>
+      <div class="t">${c.inp.toLocaleString()} in · ${c.out.toLocaleString()} out</div>
+      <div class="c">${c.cost}</div></div>`, s);
+    pop(node, b + 1.0 + i * 0.25, 30);
+    return node;
   });
+
+  // the waste, marked on the ticket
+  cards.forEach((node, i) => {
+    const m = node.querySelector(".m");
+    at(m, b + 4.6 + i * 0.08, 0.3, [{ background: "#F0F1ED", color: "#5D6168" }, { background: "#FCE7E2", color: "#D9381E" }]);
+  });
+  const x = (i) => left + i * (w + gap);
+  const t1 = el(`<div class="tag" style="left:${x(0)}px;top:${top - 70}px">1-word answer, ${D.thinking} thinking tokens</div>`, s);
+  pop(t1, b + 5.6, 12);
+  const dupe = D.calls.findIndex((c, i) => D.calls.slice(0, i).some((p) => p.step === c.step));
+  if (dupe > 0) {
+    const t2 = el(`<div class="tag" style="left:${x(dupe)}px;top:${top - 70}px">Same request as call ${D.calls.findIndex((c) => c.step === D.calls[dupe].step) + 1}</div>`, s);
+    pop(t2, b + 6.6, 12);
+  }
+  const band = el(`<div class="band" style="left:${left}px;top:${top + 250}px;width:${6 * w + 5 * gap}px">The same ${D.prefix_tokens.toLocaleString()}-token prompt is resent on all ${D.prefix_calls} calls</div>`, s);
+  pop(band, b + 7.6, 16);
+
+  const total = el(`<div class="abs" style="left:0;right:0;top:770px;text-align:center;font-size:40px;font-weight:600">
+    <span class="mono">${D.ticket_cost}</span> per ticket&nbsp;&nbsp;·&nbsp;&nbsp;<span class="mono red">${D.ticket_per1k}</span> per 1,000 tickets</div>`, s);
+  pop(total, b + 9.4);
+
+  caption(s, "A real support bot. Every ticket runs through six LLM calls.", b + 0.8, b + 4.4);
+  caption(s, "All six use the premium model, even the trivial steps.", b + 4.5, b + 7.4);
+  caption(s, "The answers look fine, so nobody checks. The bill grows with every ticket.", b + 7.5, e - 0.2);
 }
 
-// ---------- 3. logo (10 - 13.6) ----------
+// ---------- 3. logo ----------
 {
-  const s = scene(10, 13.6);
-  const logo = el(`<div class="logo abs center" style="top:470px">Trim<span class="h">-</span>T</div>`, s);
-  popC(logo, 10.2);
-  const cut = el(`<div class="cut" style="top:470px;width:0;transform:translate(-50%,-50%) rotate(-8deg)"></div>`, s);
-  at(cut, 10.75, 0.45, [{ width: "0px", opacity: 1 }, { width: "980px", opacity: 1 }], "cubic-bezier(.7,0,.3,1)");
-  at(cut, 11.25, 0.3, [{ opacity: 1 }, { opacity: 0 }], "linear");
-  const tag = el(`<div class="sub abs center" style="top:640px;font-size:42px;color:var(--ink)">Trim the tokens, <span class="red">keep the answers.</span></div>`, s);
-  popC(tag, 11.4);
+  const [b, e] = T.logo;
+  const s = scene(b, e);
+  const logo = el(`<div class="logo abs center" style="top:450px">Trim<span class="h">-</span>T</div>`, s);
+  popC(logo, b + 0.2);
+  const cut = el(`<div class="cut" style="top:450px;width:0;transform:translate(-50%,-50%) rotate(-8deg)"></div>`, s);
+  at(cut, b + 0.75, 0.45, [{ width: "0px", opacity: 1 }, { width: "980px", opacity: 1 }], "cubic-bezier(.7,0,.3,1)");
+  at(cut, b + 1.25, 0.3, [{ opacity: 1 }, { opacity: 0 }], "linear");
+  const tag = el(`<div class="sub abs center" style="top:620px;font-size:42px;color:var(--ink)">Trim the tokens, <span class="red">keep the answers.</span></div>`, s);
+  popC(tag, b + 1.3);
+  const what = el(`<div class="sub abs center" style="top:700px;font-size:30px">Trim-T finds the waste in your agent's traces and prices the fix.</div>`, s);
+  popC(what, b + 1.9);
 }
 
-// ---------- 4. terminal (13.6 - 20.4) ----------
+// ---------- 4. how it works ----------
 {
-  const s = scene(13.6, 20.4);
-  const cap = el(`<div class="label" style="left:120px;top:250px;font-size:44px;line-height:1.25">Point it at your<br>agent's traces.<small style="font-size:26px;margin-top:18px">Every call is traced with neatlogs<br>and saved locally.</small></div>`, s);
-  pop(cap, 13.8);
-  const w = el(`<div class="window" style="left:760px;top:180px;width:1040px;height:720px"><div class="bar"><i></i><i></i><i></i><span class="url">TrimT — terminal</span></div><div class="term"></div></div>`, s);
-  at(w, 13.7, 0.8, [{ opacity: 0, transform: "translateY(80px)" }, { opacity: 1, transform: "none" }]);
+  const [b, e] = T.how;
+  const s = scene(b, e);
+  const k = el(`<div class="kicker abs" style="left:0;right:0;top:110px">How it works</div>`, s);
+  pop(k, b + 0.2, 10);
+  const h = el(`<div class="headline abs" style="left:0;right:0;top:150px;font-size:64px">Trace. Detect. Price and prove.</div>`, s);
+  pop(h, b + 0.3);
+
+  const top = 300, xs = [120, 700, 1280];
+  const step1 = el(`<div class="step" style="left:${xs[0]}px;top:${top}px"><div class="num">1</div><h3>Trace</h3>
+    <p>neatlogs records every LLM call your agent makes: the step, model, tokens, prompt and answer.</p>
+    <p class="mono" style="font-size:20px;margin-top:22px;color:var(--ink)">neatlogs.wrap(client)</p></div>`, s);
+  const step2 = el(`<div class="step" style="left:${xs[1]}px;top:${top}px"><div class="num">2</div><h3>Detect</h3>
+    <div class="row"><b>1</b><span><strong>Overpowered model.</strong> A simple step on an expensive model.</span></div>
+    <div class="row"><b>2</b><span><strong>Repeated prompt.</strong> A big prompt resent on many calls.</span></div>
+    <div class="row"><b>3</b><span><strong>Redundant call.</strong> The same request made twice.</span></div></div>`, s);
+  const step3 = el(`<div class="step" style="left:${xs[2]}px;top:${top}px"><div class="num">3</div><h3>Price and prove</h3>
+    <p>Each fix is priced from the provider's real price list, never guessed by a model.</p>
+    <p>Then the fixed agent reruns on the same input and the answers are checked.</p></div>`, s);
+  pop(step1, b + 0.6, 40);
+  pop(step2, b + 4.4, 40);
+  pop(step3, b + 9.2, 40);
+  const a1 = el(`<div class="arrow" style="left:${xs[0] + 528}px;top:${top + 200}px">→</div>`, s);
+  const a2 = el(`<div class="arrow" style="left:${xs[1] + 528}px;top:${top + 200}px">→</div>`, s);
+  pop(a1, b + 4.1, 0);
+  pop(a2, b + 8.9, 0);
+
+  caption(s, "First, neatlogs records every call your agent makes.", b + 0.8, b + 4.3);
+  caption(s, "Trim-T runs three detectors over each run to find the waste.", b + 4.5, b + 9.1);
+  caption(s, "It prices each fix from the real price list.", b + 9.3, b + 12.4);
+  caption(s, "Then it reruns the fixed agent to check the answers still match.", b + 12.5, e - 0.2);
+}
+
+// ---------- 5. terminal ----------
+{
+  const [b, e] = T.term;
+  const s = scene(b, e);
+  const cap = el(`<div class="label" style="left:120px;top:250px;font-size:44px;line-height:1.25">Two commands.<small style="font-size:26px;margin-top:18px">Run your agent with neatlogs,<br>then point Trim-T at its traces.</small></div>`, s);
+  pop(cap, b + 0.2);
+  const w = el(`<div class="window" style="left:760px;top:180px;width:1040px;height:620px"><div class="bar"><i></i><i></i><i></i><span class="url">TrimT — terminal</span></div><div class="term"></div></div>`, s);
+  at(w, b + 0.1, 0.8, [{ opacity: 0, transform: "translateY(80px)" }, { opacity: 1, transform: "none" }]);
   const term = w.querySelector(".term");
-  let t = 14.5;
+  let t = b + 0.9;
   for (const [cls, text, speed] of D.terminal) {
     const ln = el(`<div class="ln ${cls}"></div>`, term);
     ln.textContent = text;
@@ -177,61 +287,58 @@ for (let i = 0; i < 26; i++) {
   }
 }
 
-// ---------- 5. the receipt, view by view (20.4 - 33.4) ----------
+// ---------- 6. the receipt, view by view ----------
 {
-  const s = scene(20.4, 33.4);
-  const W = 1360, H = 700, left = (1920 - W) / 2, top = 70;
+  const [b, e] = T.report;
+  const s = scene(b, e);
+  const W = 1360, H = 700, left = (1920 - W) / 2, top = 60;
   const scale = W / D.shot.width;
   const w = el(`<div class="window" style="left:${left}px;top:${top}px;width:${W}px;height:${H}px"><div class="bar"><i></i><i></i><i></i><span class="url">reports/report.html</span></div><div class="viewport"><img class="shot" src="${D.shot.file}"></div></div>`, s);
-  at(w, 20.5, 0.8, [{ opacity: 0, transform: "translateY(90px)" }, { opacity: 1, transform: "none" }]);
+  at(w, b + 0.1, 0.8, [{ opacity: 0, transform: "translateY(90px)" }, { opacity: 1, transform: "none" }]);
   const img = w.querySelector(".shot");
   const vh = H - 46;
   const y = (box) => -Math.max(0, (box.y + box.h / 2) * scale - vh / 2);
 
   // icons under the window, like the reference's view switcher
-  const sw = el(`<div class="switch" style="top:${top + H + 46}px"></div>`, s);
-  const labels = ["1", "2", "3"];
-  const icons = labels.map((l) => el(`<div class="sw"><div class="fill"></div><span>${l}</span></div>`, sw));
-  pop(sw, 21.0);
+  const sw = el(`<div class="switch" style="top:${top + H + 36}px"></div>`, s);
+  const icons = ["1", "2", "3"].map((l) => el(`<div class="sw"><div class="fill"></div><span>${l}</span></div>`, sw));
+  pop(sw, b + 0.6);
 
-  const caption = el(`<div class="label" style="left:${left}px;top:${top + H + 40}px;width:480px;white-space:normal"></div>`, s);
+  const capBox = el(`<div class="label" style="left:${left}px;top:${top + H + 30}px;width:480px;white-space:normal"></div>`, s);
   const hl = el(`<div class="hl" style="opacity:0"></div>`, w.querySelector(".viewport"));
 
-  // timeline of views: [time, box, caption title, caption detail]
-  const views = D.findings.map((f, i) => [22.6 + i * 2.9, f.box, f.title, f.detail]);
-  const stops = [[20.5, { y: 0, h: 0 }], [21.6, D.receipt_box]];
-  views.forEach(([tt, box]) => stops.push([tt, box]));
-  stops.push([22.6 + views.length * 2.9, D.total_box]);
+  const step = 2.9, first = b + 2.2;
+  const views = D.findings.map((f, i) => [first + i * step, f.box, f.title, f.detail]);
+  const totalAt = first + views.length * step;
   let prev = 0;
-  for (const [tt, box] of stops.slice(1)) {
+  for (const [tt, box] of [[b + 1.2, D.receipt_box], ...views.map(([tt, box]) => [tt, box]), [totalAt, D.total_box]]) {
     const to = y(box);
     at(img, tt, 0.9, [{ transform: `translateY(${prev}px)` }, { transform: `translateY(${to}px)` }]);
     prev = to;
   }
 
   // highlight follows each finding, then the total
-  [...views.map(([tt, box]) => [tt, box]), [22.6 + views.length * 2.9, D.total_box]].forEach(([tt, box], i, arr) => {
+  [...views.map(([tt, box]) => [tt, box]), [totalAt, D.total_box]].forEach(([tt, box], i, arr) => {
     const r = { left: (box.x - 10) * scale, top: (box.y - 10) * scale + y(box), width: (box.w + 20) * scale, height: (box.h + 20) * scale };
     const frame = { left: `${r.left}px`, top: `${r.top}px`, width: `${r.width}px`, height: `${r.height}px` };
     at(hl, tt + 0.55, 0.4, [{ ...frame, opacity: 0 }, { ...frame, opacity: 1 }]);
     if (i < arr.length - 1) at(hl, arr[i + 1][0] - 0.05, 0.05, [{ opacity: 1 }, { opacity: 0 }], "linear");
   });
 
-  // captions
-  views.forEach(([tt, , title, detail], i) => {
-    const c = el(`<div class="label" style="opacity:0">${title}<small>${detail}</small></div>`, caption);
-    c.style.position = "absolute";
+  views.forEach(([tt, , title, detail]) => {
+    const c = el(`<div class="label" style="opacity:0;position:absolute">${title}<small>${detail}</small></div>`, capBox);
     at(c, tt + 0.5, 0.4, [{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "none" }]);
-    at(c, tt + 2.75, 0.2, [{ opacity: 1 }, { opacity: 0 }], "linear");
+    at(c, tt + step - 0.15, 0.2, [{ opacity: 1 }, { opacity: 0 }], "linear");
   });
-  const tot = el(`<div class="label" style="opacity:0;position:absolute">Total per ticket<small>All fixes applied together, never counted twice</small></div>`, caption);
-  at(tot, 22.6 + views.length * 2.9 + 0.5, 0.4, [{ opacity: 0 }, { opacity: 1 }]);
+  const tot = el(`<div class="label" style="opacity:0;position:absolute">Total per ticket<small>All fixes applied together, never counted twice</small></div>`, capBox);
+  at(tot, totalAt + 0.5, 0.4, [{ opacity: 0 }, { opacity: 1 }]);
 
   // cursor clicks each icon
-  const cursor = el(`<svg class="cursor" viewBox="0 0 24 24" style="opacity:0"><path d="M4 2l15 9.5-6.6 1.3 3.9 7.5-3 1.5-3.9-7.6L4 19z" fill="#15171A" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>`, s);
+  const cursor = el(CURSOR, s);
+  cursor.style.opacity = 0;
   const ripple = el(`<div class="ripple"></div>`, s);
-  const iconPos = (i) => [960 + (i - 1) * 110 - 4, top + H + 46 + 44];
-  at(cursor, 21.4, 0.4, [{ opacity: 0, transform: "translate(1500px,1000px)" }, { opacity: 1, transform: "translate(1400px,960px)" }]);
+  const iconPos = (i) => [960 + (i - 1) * 110 - 4, top + H + 36 + 44];
+  at(cursor, b + 1.0, 0.4, [{ opacity: 0, transform: "translate(1500px,1000px)" }, { opacity: 1, transform: "translate(1400px,960px)" }]);
   let from = [1400, 960];
   views.forEach(([tt], i) => {
     const [cx, cy] = iconPos(i);
@@ -250,41 +357,45 @@ for (let i = 0; i < 26; i++) {
     }
     from = [cx, cy];
   });
-  at(cursor, 22.6 + views.length * 2.9 - 0.3, 0.6, [{ transform: `translate(${from[0]}px,${from[1]}px)` }, { transform: `translate(1700px,1000px)` }]);
+  at(cursor, totalAt - 0.3, 0.6, [{ transform: `translate(${from[0]}px,${from[1]}px)` }, { transform: `translate(1700px,1000px)` }]);
+
+  caption(s, "The report reads like a receipt: wasted cost struck out, the fixed cost beside it.", b + 0.6, first - 0.1);
 }
 
-// ---------- 6. proof (33.4 - 39.6) ----------
+// ---------- 7. proof ----------
 {
-  const s = scene(33.4, 39.6);
+  const [b, e] = T.proof;
+  const s = scene(b, e);
   const h = el(`<div class="headline abs center" style="top:150px;font-size:66px">Fixed, then rerun on the same ${D.n_measured > 1 ? "tickets" : "ticket"}.</div>`, s);
-  popC(h, 33.5);
+  popC(h, b + 0.1);
   const before = el(`<div class="card" style="left:260px;top:280px;width:620px"><div class="k">Before · per ticket</div><div class="big strike">${D.before}</div></div>`, s);
-  pop(before, 34.0, 40);
+  pop(before, b + 0.6, 40);
   const after = el(`<div class="card" style="left:1040px;top:280px;width:620px"><div class="k">After · per ticket</div><div class="big">${D.after}</div></div>`, s);
-  pop(after, 34.5, 40);
-  const pct = el(`<div class="abs center" style="top:690px;font:800 150px/1 Geist,sans-serif;letter-spacing:-.04em;color:var(--red)">−${D.pct}%</div>`, s);
-  at(pct, 35.2, 0.7, [{ opacity: 0, transform: "translate(-50%,-50%) scale(.6)" }, { opacity: 1, transform: "translate(-50%,-50%) scale(1)" }], "cubic-bezier(.3,1.5,.5,1)");
-  const per = el(`<div class="sub abs center" style="top:800px;font-size:30px">${D.per1k_before} → <b style="color:var(--ink)">${D.per1k_after}</b> per 1,000 tickets</div>`, s);
-  popC(per, 35.8);
-  const pills = el(`<div class="abs center" style="top:900px;display:flex;gap:18px">${D.verdicts.map((v) => `<span class="pill">✓ ${v}</span>`).join("")}</div>`, s);
-  popC(pills, 36.5);
+  pop(after, b + 1.1, 40);
+  const pct = el(`<div class="abs center" style="top:670px;font:800 150px/1 Geist,sans-serif;letter-spacing:-.04em;color:var(--red)">−${D.pct}%</div>`, s);
+  at(pct, b + 1.8, 0.7, [{ opacity: 0, transform: "translate(-50%,-50%) scale(.6)" }, { opacity: 1, transform: "translate(-50%,-50%) scale(1)" }], "cubic-bezier(.3,1.5,.5,1)");
+  const per = el(`<div class="sub abs center" style="top:780px;font-size:30px">${D.per1k_before} → <b style="color:var(--ink)">${D.per1k_after}</b> per 1,000 tickets</div>`, s);
+  popC(per, b + 2.4);
+  const pills = el(`<div class="abs center" style="top:870px;display:flex;gap:18px">${D.verdicts.map((v) => `<span class="pill">✓ ${v}</span>`).join("")}</div>`, s);
+  popC(pills, b + 3.1);
 }
 
-// ---------- 7. end card (39.6 - total) ----------
+// ---------- 8. end card ----------
 {
-  const s = scene(39.6, D.total + 0.4);
+  const [b, e] = T.end;
+  const s = scene(b, e);
   const logo = el(`<div class="logo abs center" style="top:360px;font-size:150px">Trim<span class="h">-</span>T</div>`, s);
-  popC(logo, 39.8);
+  popC(logo, b + 0.2);
   const url = el(`<div class="abs center mono" style="top:510px;font-size:36px;font-weight:500">github.com/collex89/TrimT</div>`, s);
-  popC(url, 40.3);
+  popC(url, b + 0.7);
   const btnWrap = el(`<div class="abs" style="left:0;right:0;top:600px;text-align:center"><div class="btn">Find your agent's waste</div></div>`, s);
-  pop(btnWrap, 40.7);
+  pop(btnWrap, b + 1.1);
   const btn = btnWrap.querySelector(".btn");
-  const cur = el(`<svg class="cursor" viewBox="0 0 24 24"><path d="M4 2l15 9.5-6.6 1.3 3.9 7.5-3 1.5-3.9-7.6L4 19z" fill="#15171A" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>`, s);
-  at(cur, 41.2, 0.7, [{ transform: "translate(1300px,900px)" }, { transform: "translate(1010px,650px)" }]);
-  at(btn, 42.0, 0.2, [{ transform: "scale(1)" }, { transform: "scale(.95)" }, { transform: "scale(1)" }], "linear");
+  const cur = el(CURSOR, s);
+  at(cur, b + 1.6, 0.7, [{ transform: "translate(1300px,900px)" }, { transform: "translate(1010px,650px)" }]);
+  at(btn, b + 2.4, 0.2, [{ transform: "scale(1)" }, { transform: "scale(.95)" }, { transform: "scale(1)" }], "linear");
   const foot = el(`<div class="sub abs center" style="top:820px;font-size:26px">Built on neatlogs traces · neatHack 2026</div>`, s);
-  popC(foot, 41.0);
+  popC(foot, b + 1.4);
 }
 
 window.seek = (t) => { for (const a of anims) a.currentTime = t * 1000; };
