@@ -1,0 +1,36 @@
+this is basically what i will use but just add a few more dangers and reason why TrimT stands out
+
+AI agents quietly overpay for every step. I built Trim-T for #neatHack: it reads an agent’s @neatlogs traces, finds the waste (overpowered models, repeated prompts, duplicate calls) and prices the fix.
+Same answers, 74% cheaper per ticket.
+
+use /anthropic-skills:humanizer
+
+---
+
+how much do you think i will need to add for more Api trials
+
+---
+
+give me a guide to do that
+
+---
+
+i have cfo business plan already
+
+---
+
+minimum amount is $30
+
+---
+
+i have a cfo plan already
+
+---
+
+i received a mail saying the demo video should clearly explain the problem you are solving and how the solution works and i do not clearly think my video did all that
+
+---
+
+good, i noticed we have a claude folder in this project... do you think it is not necessary that it appears in the git repo?
+
+since it is a hackathon
