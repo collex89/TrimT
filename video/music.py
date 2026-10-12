@@ -1,6 +1,6 @@
 """Generate an original, royalty-free background track for the explainer.
 
-    python video/music.py            # -> video/music.wav
+    python video/music.py --duration 71      # -> video/music.wav
 
 Soft pad chords (C - G - Am - F), a plucked arpeggio and a light kick and hat at 100 BPM.
 """
@@ -21,7 +21,6 @@ BAR = 4 * BEAT
 # chord tones as MIDI notes
 CHORDS = [[48, 55, 60, 64, 67], [43, 50, 55, 59, 62], [45, 52, 57, 60, 64], [41, 48, 53, 57, 60]]
 
-t_all = np.arange(int(SR * DURATION)) / SR
 
 
 def hz(midi: float) -> float:
@@ -76,13 +75,15 @@ def hat(rng):
     return noise * np.exp(-np.arange(n) / SR * 60)
 
 
-def main() -> int:
+def make(duration: float = DURATION) -> np.ndarray:
+    """Stereo float track in [-0.8, 0.8], shape (samples, 2)."""
+    t_all = np.arange(int(SR * duration)) / SR
     rng = np.random.default_rng(7)
     pad = np.zeros_like(t_all)
     arp = np.zeros_like(t_all)
     drums = np.zeros_like(t_all)
 
-    bars = int(DURATION / BAR) + 1
+    bars = int(duration / BAR) + 1
     for b in range(bars):
         start = b * BAR
         chord = CHORDS[b % len(CHORDS)]
@@ -106,13 +107,25 @@ def main() -> int:
 
     stereo *= env(len(t_all), 1.5, 3.0)[:, None]  # fade in and out
     stereo /= np.max(np.abs(stereo)) / 0.8
-    pcm = (stereo * 32767).astype(np.int16)
+    return stereo
 
-    with wave.open(str(OUT), "wb") as w:
+
+def write_wav(path: Path, stereo: np.ndarray) -> None:
+    pcm = (np.clip(stereo, -1, 1) * 32767).astype(np.int16)
+    with wave.open(str(path), "wb") as w:
         w.setnchannels(2)
         w.setsampwidth(2)
         w.setframerate(SR)
         w.writeframes(pcm.tobytes())
+
+
+def main(argv=None) -> int:
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--duration", type=float, default=DURATION)
+    args = parser.parse_args(argv)
+    write_wav(OUT, make(args.duration))
     print(OUT)
     return 0
 
